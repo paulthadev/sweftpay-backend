@@ -1,19 +1,10 @@
-console.log("Auth routes loaded");
-
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/auth.controller");
 const authValidator = require("../validators/auth.validator");
 
 // User registration
-router.post(
-  "/register",
-  authValidator.register,
-  authController.register,
-  (req, res) => {
-    console.log("Register route hit");
-  }
-);
+router.post("/register", authValidator.register, authController.register);
 
 // User verify email
 router.post(

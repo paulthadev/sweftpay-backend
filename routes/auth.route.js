@@ -6,7 +6,14 @@ const authController = require("../controllers/auth.controller");
 const authValidator = require("../validators/auth.validator");
 
 // User registration
-router.post("/register", authValidator.register, authController.register);
+router.post(
+  "/register",
+  authValidator.register,
+  authController.register,
+  (req, res) => {
+    console.log("Register route hit");
+  }
+);
 
 // User verify email
 router.post(

@@ -5,6 +5,7 @@ const appRoutes = require("./routes/");
 const handleResponse = require("./helpers/response");
 const connectDB = require("./config/db");
 const kleur = require("kleur");
+const rtracer = require("cls-rtracer");
 
 const app = express();
 const server = http.createServer(app);
@@ -14,6 +15,8 @@ const PORT = config.PORT;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(rtracer.expressMiddleware());
 
 // Routes
 app.get("/", (req, res) => {

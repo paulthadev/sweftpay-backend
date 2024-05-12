@@ -255,7 +255,12 @@ class PaymentValidator {
         .valid("waec-registration", "waec", "jamb")
         .required(),
       variationCode: Joi.string().required(),
-      quantity: Joi.number().optional()
+      billersCode: Joi.when("serviceId", {
+        is: Joi.equal("jamb"),
+        then: Joi.string().required(),
+        otherwise: Joi.string().optional(),
+      }),
+      quantity: Joi.number().optional(),
     });
 
     const { error } = schema.validate(req.body);

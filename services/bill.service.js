@@ -90,10 +90,10 @@ class BillService {
         status: data?.code === "000" ? "success" : "failed",
       });
 
-      if (data?.code !== "000") {
+      if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: "Request failed to complete, try again later",
+          message: data?.content?.error || "Request failed to complete, try again later",
         };
       }
 
@@ -163,10 +163,10 @@ class BillService {
         request: JSON.stringify(requestPayload),
         headers: JSON.stringify(headers),
         response: JSON.stringify(data),
-        status: data?.code === "000" ? "success" : "failed",
+        status: data?.response_description === "000" ? "success" : "failed",
       });
 
-      if (data?.code !== "000") {
+      if (data?.response_description !== "000") {
         return {
           status: "failed",
           message: "Request failed to complete, try again later",
@@ -259,10 +259,10 @@ class BillService {
         status: data?.code === "000" ? "success" : "failed",
       });
 
-      if (data?.code !== "000") {
+      if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: "Request failed to complete, try again later",
+          message: data?.content?.error || "Request failed to complete, try again later",
         };
       }
 
@@ -333,10 +333,10 @@ class BillService {
         status: data?.code === "000" ? "success" : "failed",
       });
 
-      if (data?.code !== "000") {
+      if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: "Request failed to complete, try again later",
+          message: data?.content?.error || "Request failed to complete, try again later",
         };
       }
 
@@ -425,10 +425,10 @@ class BillService {
         status: data?.code === "000" ? "success" : "failed",
       });
 
-      if (data?.code !== "000") {
+      if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: "Request failed to complete, try again later",
+          message: data?.content?.error || "Request failed to complete, try again later",
         };
       }
 
@@ -499,10 +499,10 @@ class BillService {
         status: data?.code === "000" ? "success" : "failed",
       });
 
-      if (data?.code !== "000") {
+      if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: "Request failed to complete, try again later",
+          message: data?.content?.error || "Request failed to complete, try again later",
         };
       }
 
@@ -661,10 +661,10 @@ class BillService {
         status: data?.code === "000" ? "success" : "failed",
       });
 
-      if (data?.code !== "000") {
+      if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: "Request failed to complete, try again later",
+          message: data?.content?.error || "Request failed to complete, try again later",
         };
       }
 
@@ -825,10 +825,10 @@ class BillService {
         status: data?.code === "000" ? "success" : "failed",
       });
 
-      if (data?.code !== "000") {
+      if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: "Request failed to complete, try again later",
+          message: data?.content?.error || "Request failed to complete, try again later",
         };
       }
 

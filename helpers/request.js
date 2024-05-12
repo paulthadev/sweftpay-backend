@@ -1,8 +1,8 @@
+const logger = require("../utils/logger");
 const handleResponse = require("./response");
 
 const handleRequest = async (req, res, next) => {
   try {
-    if (!["POST", "PUT", "PATCH"].includes(req.method)) return next();
 
     let requestBody = { ...req.body, ...req.query };
 
@@ -11,7 +11,7 @@ const handleRequest = async (req, res, next) => {
     if (requestBody.oldPassword) delete requestBody.oldPassword;
     if (requestBody.newPassword) delete requestBody.newPassword;
 
-    // TODO: Log request
+    logger(module).info(`${req.method} - ${req.ip} - ${req.originalUrl} - ${JSON.stringify(requestBody)}`)
 
     return next();
   } catch (error) {

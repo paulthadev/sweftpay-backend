@@ -1,11 +1,11 @@
 const Wallet = require("../models/Wallet");
 const WalletAudit = require("../models/WalletAudit");
-const Transactions  = require("../models/Transaction")
-const MonnifyService = require("../services/monnify.service")
-const BillService = require("./bill.service")
+const Transactions = require("../models/Transaction");
+const MonnifyService = require("../services/monnify.service");
+const BillService = require("./bill.service");
 const { v4: uuidv4 } = require("uuid");
-const WalletUtils = require("../utils/wallet")
-const moment = require("moment")
+const WalletUtils = require("../utils/wallet");
+const moment = require("moment");
 
 class PaymentService {
   payBill = async (payload) => {
@@ -41,7 +41,7 @@ class PaymentService {
         };
       }
 
-      const preReference = moment().format("YYYYMMDDHHmm")
+      const preReference = moment().utcOffset(1).format("YYYYMMDDHHmm");
 
       const reference = `${preReference}${uuidv4()}`;
 
@@ -145,7 +145,7 @@ class PaymentService {
         };
       }
 
-      const preReference = moment().format("YYYYMMDDHHmm")
+      const preReference = moment().utcOffset(1).format("YYYYMMDDHHmm");
 
       const reference = `${preReference}${uuidv4()}`;
 
@@ -213,7 +213,7 @@ class PaymentService {
       if (billServiceRes.status === "failed") {
         return {
           status: "failed",
-          message:  billServiceRes.message || "Request failed, try again later!",
+          message: billServiceRes.message || "Request failed, try again later!",
         };
       }
 
@@ -256,7 +256,7 @@ class PaymentService {
         };
       }
 
-      const preReference = moment().format("YYYYMMDDHHmm")
+      const preReference = moment().utcOffset(1).format("YYYYMMDDHHmm");
 
       const reference = `${preReference}${uuidv4()}`;
 
@@ -324,7 +324,7 @@ class PaymentService {
       if (billServiceRes.status === "failed") {
         return {
           status: "failed",
-          message:  billServiceRes.message || "Request failed, try again later!",
+          message: billServiceRes.message || "Request failed, try again later!",
         };
       }
 
@@ -367,7 +367,7 @@ class PaymentService {
         };
       }
 
-      const preReference = moment().format("YYYYMMDDHHmm")
+      const preReference = moment().utcOffset(1).format("YYYYMMDDHHmm");
 
       const reference = `${preReference}${uuidv4()}`;
 
@@ -435,7 +435,8 @@ class PaymentService {
       if (billServiceRes.status === "failed") {
         return {
           status: "failed",
-          message: billServiceRes?.message || "Request failed, try again later!",
+          message:
+            billServiceRes?.message || "Request failed, try again later!",
         };
       }
 
@@ -456,14 +457,8 @@ class PaymentService {
   payEducationalBill = async (payload) => {
     try {
       const { user, data } = payload;
-      const {
-        amount,
-        phone,
-        serviceId,
-        billersCode,
-        variationCode,
-        quantity
-      } = data;
+      const { amount, phone, serviceId, billersCode, variationCode, quantity } =
+        data;
 
       const walletCheckRes = await WalletUtils.checkForSufficientWallet({
         userId: user._id,
@@ -477,7 +472,7 @@ class PaymentService {
         };
       }
 
-      const preReference = moment().format("YYYYMMDDHHmm")
+      const preReference = moment().utcOffset(1).format("YYYYMMDDHHmm");
 
       const reference = `${preReference}${uuidv4()}`;
 

@@ -3,6 +3,8 @@ const crypto = require("crypto");
 const config = require("../config/variables");
 const emailTemplate = require("./emailTemplate");
 
+const User = require("../models/User");
+
 const generateOTP = () => {
   return crypto.randomInt(100000, 999999).toString();
 };
@@ -32,4 +34,26 @@ const sendEmail = async (email, otp) => {
   });
 };
 
-module.exports = { generateOTP, sendEmail };
+// To resend otp to the mail
+const resendOTP = async (email) => {
+  try {
+    // Find the user by email and update their OTP
+    const user = await User.findOneAndUpdate(
+      { email },
+      { otp: newOTP },
+      { new: true }
+    );
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Send the new OTP to the user's email
+    await sendEmail(email, newOTP);
+  } catch (err) {
+    console.error("Error resending OTP:", err);
+    // Handle the error appropriately
+  }
+};
+
+module.exports = { generateOTP, sendEmail, resendOTP };

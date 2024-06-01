@@ -18,4 +18,6 @@ module.exports = {
   VT_PASS_BASE_URL: process.env.VT_PASS_BASE_URL,
   VT_PASS_USERNAME: process.env.VT_PASS_USERNAME,
   VT_PASS_PASSWORD: process.env.VT_PASS_PASSWORD,
+  EMAIL: process.env.EMAIL,
+  PASS: process.env.PASS
 };

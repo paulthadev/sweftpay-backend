@@ -1,17 +1,17 @@
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-require('dotenv').config()
+const config = require("../config/variables");
 
 const generateOTP = () => {
     return crypto.randomInt(100000, 999999).toString();
 }
 
-const sendEmail = async (email) => {
+const sendEmail = async (email, otp) => {
     const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-            user: process.env.EMAIL,
-            pass: process.env.PASS,
+            user: config.EMAIL,
+            pass: config.PASS,
         }
     })
     const mailOptions = {

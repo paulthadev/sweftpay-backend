@@ -7,8 +7,6 @@ const connectDB = require("./config/db");
 const kleur = require("kleur");
 const rtracer = require("cls-rtracer");
 
-const { resendOTP } = require("./utils/otp"); // Replace with the actual path
-
 const app = express();
 const server = http.createServer(app);
 
@@ -26,23 +24,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", appRoutes);
-
-// Resend OTP route
-app.post("/resend-otp", async (req, res) => {
-  const { email } = req.body;
-  try {
-    await resendOTP(email);
-    return handleResponse(
-      req,
-      res,
-      { message: "OTP resent successfully" },
-      200
-    );
-  } catch (err) {
-    console.error("Error resending OTP:", err);
-    return handleResponse(req, res, { message: "Failed to resend OTP" }, 500);
-  }
-});
 
 // UNHANDLED ROUTES
 app.all("*", (req, res) => {

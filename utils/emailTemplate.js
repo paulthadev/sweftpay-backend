@@ -84,7 +84,7 @@ function emailTemplate(otp) {
 <body>
     <div class="container">
         <div class="header">
-               <img src="data:image/png;base64,${logoBase64}" alt="SweftPay Logo">
+               <img src="${logoBase64}" alt="SweftPay Logo">
             <h1> Sign-up Verification code </h1>
         </div>
         <div class="content">

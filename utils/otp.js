@@ -8,7 +8,9 @@ const generateOTP = () => {
 
 const sendEmail = async (email, otp) => {
   const transporter = nodemailer.createTransport({
-    service: "Gmail",
+    host: "server330.web-hosting.com",
+    port: 465,
+    secure: true,
     auth: {
       user: config.EMAIL,
       pass: config.PASS,
@@ -16,7 +18,7 @@ const sendEmail = async (email, otp) => {
   });
   const mailOptions = {
     to: email,
-    from: process.env.MAIL,
+    from: config.EMAIL,
     subject: "SweftPay Account Registration OTP",
     text: `Your OTP for your account registration is: ${otp}\nIt is valid for 10 minutes`,
   };

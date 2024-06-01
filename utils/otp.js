@@ -36,6 +36,8 @@ const sendEmail = async (email, otp) => {
 
 // To resend otp to the mail
 const resendOTP = async (email) => {
+  const newOTP = generateOTP(); // Generate a new OTP
+
   try {
     // Find the user by email and update their OTP
     const user = await User.findOneAndUpdate(

@@ -1,4 +1,6 @@
 function emailTemplate(otp) {
+  const currentYear = new Date().getFullYear();
+
   const otpHTML = `
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +13,7 @@ function emailTemplate(otp) {
     body {
         margin: 0;
         padding: 0;
-        font-family: Arial, sans-serif;
+        font-family: Montserrat, Arial, sans-serif;
         font-size: 14px;
         color: #333333;
         background-color: #f5f5f5;
@@ -28,7 +30,7 @@ function emailTemplate(otp) {
 
     /* Header */
     .header {
-        background-color: #2c3e50;
+        background-color: #7912E5;
         color: #ffffff;
         padding: 20px;
         text-align: center;
@@ -52,6 +54,7 @@ function emailTemplate(otp) {
         padding: 10px;
         background-color: #f1f1f1;
         border-radius: 5px;
+        color: #6364FF;
     }
 
     /* Footer */
@@ -71,7 +74,7 @@ function emailTemplate(otp) {
 <body>
     <div class="container">
         <div class="header">
-            <h1>SweftPay</h1>
+            <h1>SweftPay SignUp OTP</h1>
         </div>
         <div class="content">
             <p>Hi SweftPayer,</p>
@@ -85,7 +88,7 @@ function emailTemplate(otp) {
             <p>Best Regards!</p>
             <p>SweftPay Team</p>
             <p>Email: help@sweftpay.com | Phone: +234 (0)7043786775</p>
-            <p>&copy; 2024 SweftPay. All rights reserved.</p>
+            <p>&copy; ${currentYear} SweftPay. All rights reserved.</p>
         </div>
     </div>
 </body>

@@ -1,6 +1,7 @@
+const logoUrl = "../assets/logo.png";
+
 function emailTemplate(otp) {
   const currentYear = new Date().getFullYear();
-  const logoBase64 = require("./logo");
 
   const otpHTML = `
 <!DOCTYPE html>
@@ -84,8 +85,8 @@ function emailTemplate(otp) {
 <body>
     <div class="container">
         <div class="header">
-               <img src="${logoBase64}" alt="SweftPay Logo">
-            <h1> Sign-up Verification code </h1>
+            <img src="${logoUrl}" alt="SweftPay Logo">
+            <h1>SweftPay SignUp OTP</h1>
         </div>
         <div class="content">
             <p>Hi SweftPayer,</p>

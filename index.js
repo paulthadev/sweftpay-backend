@@ -6,6 +6,7 @@ const handleResponse = require("./helpers/response");
 const connectDB = require("./config/db");
 const kleur = require("kleur");
 const rtracer = require("cls-rtracer");
+const path = require("path");
 
 const app = express();
 const server = http.createServer(app);
@@ -15,6 +16,8 @@ const PORT = config.PORT;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/assets", express.static(path.join(__dirname, "assets")));
 
 app.use(rtracer.expressMiddleware());
 

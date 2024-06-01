@@ -8,7 +8,7 @@ const generateOTP = () => {
 
 const sendEmail = async (email, otp) => {
   const transporter = nodemailer.createTransport({
-    host: "server330.web-hosting.com",
+    host: "sweftpay.com",
     port: 465,
     secure: true,
     auth: {

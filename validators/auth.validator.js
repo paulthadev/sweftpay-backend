@@ -25,7 +25,7 @@ class AuthValidator {
 
   verifyEmail = async (req, res, next) => {
     const schema = Joi.object({
-      email: Joi.string().email().required(),
+      otp: Joi.string().required(),
     });
 
     const { error } = schema.validate(req.body);

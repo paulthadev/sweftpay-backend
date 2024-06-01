@@ -1,5 +1,6 @@
 function emailTemplate(otp) {
   const currentYear = new Date().getFullYear();
+  const logoUrl = "../assets/logo.png";
 
   const otpHTML = `
 <!DOCTYPE html>
@@ -29,16 +30,25 @@ function emailTemplate(otp) {
     }
 
     /* Header */
-    .header {
+  .header {
         background-color: #7912E5;
         color: #ffffff;
         padding: 20px;
         text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .header h1 {
         margin: 0;
         font-size: 24px;
+        margin-left: 10px; /* Add some spacing between the logo and text */
+    }
+
+    .header img {
+        max-width: 50px; /* Adjust the size of the logo as needed */
+        height: auto;
     }
 
     /* Content */
@@ -74,6 +84,7 @@ function emailTemplate(otp) {
 <body>
     <div class="container">
         <div class="header">
+            <img src="${logoUrl}" alt="SweftPay Logo">
             <h1>SweftPay SignUp OTP</h1>
         </div>
         <div class="content">

@@ -12,6 +12,9 @@ const server = http.createServer(app);
 
 const PORT = config.PORT;
 
+// Serve static files from the 'assets' folder
+app.use("/assets", express.static(path.join(__dirname, "assets")));
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

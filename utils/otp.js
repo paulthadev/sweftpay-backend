@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const config = require("../config/variables");
+const emailTemplate = require("./emailTemplate");
 
 const generateOTP = () => {
   return crypto.randomInt(100000, 999999).toString();
@@ -18,9 +19,9 @@ const sendEmail = async (email, otp) => {
   });
   const mailOptions = {
     to: email,
-    from: config.EMAIL,
-    subject: "SweftPay Account Registration OTP",
-    text: `Your OTP for your account registration is: ${otp}\nIt is valid for 10 minutes`,
+    from: `SweftPay < ${config.EMAIL}>`,
+    subject: "Verfication code",
+    html: emailTemplate(otp),
   };
   transporter.sendMail(mailOptions, (err) => {
     if (err) {

@@ -53,8 +53,12 @@ const resendOTP = async (email) => {
     // Send the new OTP to the user's email
     await sendEmail(email, newOTP);
   } catch (err) {
-    console.error("Error resending OTP:", err);
-    // Handle the error appropriately
+    if (err.message === "User not found") {
+      console.error("User not found. OTP not sent.");
+    } else {
+      console.error("Error resending OTP:", err);
+    }
+    // Handle other errors appropriately
   }
 };
 

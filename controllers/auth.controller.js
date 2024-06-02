@@ -1,5 +1,6 @@
 const handleResponse = require("../helpers/response");
 const AuthService = require("../services/auth.service");
+const { resendOTP } = require("../utils/otp");
 
 class AuthController {
   register = async (req, res) => {
@@ -65,6 +66,18 @@ class AuthController {
         { message: "An unexpected error occurred" },
         500
       );
+    }
+  };
+
+  resendOTPController = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+      await resendOTP(email);
+      return res.status(200).json({ message: "OTP resent successfully" });
+    } catch (err) {
+      console.error("Error resending OTP:", err);
+      return res.status(500).json({ message: "Failed to resend OTP" });
     }
   };
 }

@@ -62,7 +62,7 @@ class AuthService {
       if (!userExists) {
         return {
           status: "failed",
-          message: "User does not exist or OTP has expired",
+          message: "Invalid OTP or OTP has expired",
         };
       }
 

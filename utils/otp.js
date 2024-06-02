@@ -25,13 +25,14 @@ const sendEmail = async (email, otp) => {
     subject: "Verfication code",
     html: emailTemplate(otp),
   };
-  transporter.sendMail(mailOptions, (err) => {
-    if (err) {
-      console.error("Error Sending email", err);
-    } else {
-      console.log("OTP email sent successfully");
-    }
-  });
+
+  try {
+    await transporter.sendMail(mailOptions);
+    return { success: true };
+  } catch (err) {
+    console.error("Error sending email:", err);
+    return { error: "Failed to send email" };
+  }
 };
 
 // To resend otp to the mail
@@ -51,14 +52,15 @@ const resendOTP = async (email) => {
     }
 
     // Send the new OTP to the user's email
-    await sendEmail(email, newOTP);
-  } catch (err) {
-    if (err.message === "User not found") {
-      console.error("User not found. OTP not sent.");
-    } else {
-      console.error("Error resending OTP:", err);
+    const emailResult = await sendEmail(email, newOTP);
+    if (emailResult.error) {
+      return { error: emailResult.error };
     }
-    // Handle other errors appropriately
+
+    return { success: true };
+  } catch (err) {
+    console.error("Error resending OTP:", err);
+    return { error: "Failed to resend OTP" };
   }
 };
 

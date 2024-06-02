@@ -1,6 +1,7 @@
 const handleResponse = require("../helpers/response");
 const AuthService = require("../services/auth.service");
 const { resendOTP } = require("../utils/otp");
+const logger = require("../utils/logger");
 
 class AuthController {
   register = async (req, res) => {
@@ -15,13 +16,8 @@ class AuthController {
         status == "success" ? 200 : 400
       );
     } catch (error) {
-      console.log(error);
-      return handleResponse(
-        req,
-        res,
-        { message: "An unexpected error occurred" },
-        500
-      );
+      logger.error("Error in registration:", error);
+      return handleResponse(req, res, { message: error.message }, 500);
     }
   };
 
@@ -37,13 +33,8 @@ class AuthController {
         status == "success" ? 200 : 400
       );
     } catch (error) {
-      console.log(error);
-      return handleResponse(
-        req,
-        res,
-        { message: "An unexpected error occurred" },
-        500
-      );
+      logger.error("Error in email verification:", error);
+      return handleResponse(req, res, { message: error.message }, 500);
     }
   };
 
@@ -59,27 +50,38 @@ class AuthController {
         status == "success" ? 200 : 400
       );
     } catch (error) {
-      console.log(error);
-      return handleResponse(
-        req,
-        res,
-        { message: "An unexpected error occurred" },
-        500
-      );
+      logger.error("Error in login:", error);
+      return handleResponse(req, res, { message: error.message }, 500);
     }
   };
 
   resendOTPController = async (req, res) => {
     const { email } = req.body;
 
-    try {
-      await resendOTP(email);
-      return res.status(200).json({ message: "OTP resent successfully" });
-    } catch (err) {
-      console.error("Error resending OTP:", err);
-      return res.status(500).json({ message: "Failed to resend OTP" });
+    const result = await resendOTP(email);
+
+    if (result.error) {
+      const { error: errorMessage } = result;
+      const statusCode = handleResendOTPError(errorMessage);
+      return res.status(statusCode).json({ message: errorMessage });
     }
+
+    return res
+      .status(200)
+      .json({ success: true, message: "OTP resent successfully" });
   };
 }
+
+// Helper function to handle resend OTP errors
+const handleResendOTPError = (errorMessage) => {
+  switch (errorMessage) {
+    case "User not found":
+      return 404;
+    case "Failed to send email":
+      return 500;
+    default:
+      return 500;
+  }
+};
 
 module.exports = new AuthController();

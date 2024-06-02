@@ -79,9 +79,10 @@ const handleResendOTPError = (errorMessage) => {
       return 404;
     case "Failed to send email":
       return 500;
+    case "Email already verified":
+      return 400; // Return a 400 Bad Request status code
     default:
       return 500;
   }
 };
-
 module.exports = new AuthController();

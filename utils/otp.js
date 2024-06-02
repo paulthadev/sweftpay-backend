@@ -35,21 +35,26 @@ const sendEmail = async (email, otp) => {
   }
 };
 
-// To resend otp to the mail
 const resendOTP = async (email) => {
   const newOTP = generateOTP(); // Generate a new OTP
 
   try {
-    // Find the user by email and update their OTP
-    const user = await User.findOneAndUpdate(
-      { email },
-      { otp: newOTP },
-      { new: true }
-    );
+    // Find the user by email
+    const user = await User.findOne({ email });
 
     if (!user) {
-      throw new Error("User not found");
+      return { error: "User not found" };
     }
+
+    // Check if the user's email is already verified
+    if (user.emailVerified) {
+      return { error: "Email already verified" };
+    }
+
+    // Update the user's OTP
+    user.otp = newOTP;
+    user.otpExpires = Date.now() + 3600000; // Set OTP expiration time (1 hour)
+    await user.save();
 
     // Send the new OTP to the user's email
     const emailResult = await sendEmail(email, newOTP);

@@ -42,7 +42,7 @@ app.use((err, req, res, next) => {
     500
   );
 
-  next();
+  // next(); //
 });
 
 server.listen(PORT, async () => {

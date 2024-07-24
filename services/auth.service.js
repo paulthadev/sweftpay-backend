@@ -33,7 +33,7 @@ class AuthService {
 
       const newUser = await User.create(newUserPayload);
       sendEmail(email.toLowerCase(), otp);
-      // TODO: send email verification link to email
+      // send email verification link to email
 
       return {
         status: "success",

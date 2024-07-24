@@ -4,7 +4,7 @@ const PaymentService = require("../services/payment.service");
 class PaymentController {
   payBill = async (req, res) => {
     try {
-      //TODO: perform user profile logic
+      //perform user profile logic
       const response = await PaymentService.payBill(req.body);
       const { status, data, message } = response;
 

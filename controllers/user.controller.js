@@ -4,7 +4,7 @@ const UserService = require("../services/user.service");
 class UserController {
   userProfile = async (req, res) => {
     try {
-      //TODO: perform user profile logic
+      // perform user profile logic
       const response = await UserService.userProfile(req.user);
       const { status, data, message } = response;
 
@@ -27,7 +27,7 @@ class UserController {
 
   wallet = async (req, res) => {
     try {
-      //TODO: perform wallet logic
+      //perform wallet logic
       const response = await UserService.wallet(req.user);
       const { status, data, message } = response;
 

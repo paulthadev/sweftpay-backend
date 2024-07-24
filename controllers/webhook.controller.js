@@ -1,6 +1,6 @@
 const handleResponse = require("../helpers/response");
-const MonnifyService = require("../services/monnify.service")
-const BillService = require("../services/bill.service")
+const MonnifyService = require("../services/monnify.service");
+const BillService = require("../services/bill.service");
 
 class WebhookController {
   handleMonnifyTransactions = async (req, res) => {
@@ -10,7 +10,7 @@ class WebhookController {
         headers: req.headers,
         query: req.query,
       });
-      const { status, data, message } = response;
+      const { status, message } = response;
 
       return res.status(status === "failed" ? 400 : 200).json({
         status: status === "failed" ? "FAIL" : "SUCCESS",
@@ -34,7 +34,7 @@ class WebhookController {
         headers: req.headers,
         query: req.query,
       });
-      const { status, data, message } = response;
+      // const { status, data, message } = response;
 
       return res.status(200).json({
         response: "success",

@@ -34,7 +34,7 @@ class WebhookController {
         headers: req.headers,
         query: req.query,
       });
-      // const { status, data, message } = response;
+      const { status, data, message } = response;
 
       return res.status(200).json({
         response: "success",

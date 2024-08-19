@@ -6,6 +6,7 @@ const handleResponse = require("./helpers/response");
 const connectDB = require("./config/db");
 const kleur = require("kleur");
 const rtracer = require("cls-rtracer");
+const path = require("path");
 
 const app = express();
 const server = http.createServer(app);
@@ -17,6 +18,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(rtracer.expressMiddleware());
+
+// Serve static files from the uploads directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 app.get("/", (req, res) => {
@@ -42,7 +46,7 @@ app.use((err, req, res, next) => {
     500
   );
 
-  // next(); //
+  next();
 });
 
 server.listen(PORT, async () => {

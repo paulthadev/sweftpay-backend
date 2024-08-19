@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const userController = require('../controllers/user.controller');
-const authMiddleware = require("../middleware/auth.middleware")
+const userController = require("../controllers/user.controller");
+const authMiddleware = require("../middleware/auth.middleware");
 
 // user profile
 router.get(
@@ -17,6 +17,32 @@ router.get(
   authMiddleware.ValidateBearerToken,
   authMiddleware.ValidateUserStatus,
   userController.wallet
+);
+
+// New routes
+// delete account
+router.delete(
+  "/delete-account",
+  authMiddleware.ValidateBearerToken,
+  authMiddleware.ValidateUserStatus,
+  userController.deleteAccount
+);
+
+// update profile
+router.put(
+  "/update-profile",
+  authMiddleware.ValidateBearerToken,
+  authMiddleware.ValidateUserStatus,
+  upload.single("profileImage"),
+  userController.updateProfile
+);
+
+// change password
+router.put(
+  "/change-password",
+  authMiddleware.ValidateBearerToken,
+  authMiddleware.ValidateUserStatus,
+  userController.changePassword
 );
 
 module.exports = router;

@@ -16,20 +16,23 @@ const userSchema = new mongoose.Schema(
     },
     emailVerified: {
       type: mongoose.Schema.Types.Boolean,
-      default: false
+      default: false,
     },
     accessToken: {
       type: String,
     },
     isActive: {
       type: mongoose.Schema.Types.Boolean,
-      default: true
+      default: true,
     },
-    otp:{
+    otp: {
       type: String,
     },
-    otpExpires:{
-      type: Date
+    otpExpires: {
+      type: Date,
+    },
+    profileImage: {
+      type: String,
     },
   },
   {
@@ -38,7 +41,7 @@ const userSchema = new mongoose.Schema(
       transform(doc, ret) {
         delete ret.__v;
       },
-    }
+    },
   }
 );
 

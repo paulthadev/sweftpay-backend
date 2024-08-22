@@ -147,12 +147,36 @@ class AuthController {
   };
 
   getResetPassword = async (req, res) => {
-    // This method is optional, used if you want to validate the token before showing the reset form
-    const { token } = req.params;
+    try {
+      const { token } = req.params;
 
-    // You might want to check if the token is valid here
-    // For now, we'll just return a success message
-    return handleResponse(req, res, { message: "Token is valid" }, 200);
+      // Hash the token from the URL
+      const hashedToken = crypto
+        .createHash("sha256")
+        .update(token)
+        .digest("hex");
+
+      // Find user by hashed token
+      const user = await User.findOne({
+        resetPasswordToken: hashedToken,
+        resetPasswordExpire: { $gt: Date.now() },
+      });
+
+      if (!user) {
+        return handleResponse(
+          req,
+          res,
+          { message: "Invalid or expired token" },
+          400
+        );
+      }
+
+      // If we reach here, the token is valid
+      return handleResponse(req, res, { message: "Token is valid" }, 200);
+    } catch (error) {
+      console.error("Error in validating reset password token:", error);
+      return handleResponse(req, res, { message: "Server error" }, 500);
+    }
   };
 
   resetPassword = async (req, res) => {

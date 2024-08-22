@@ -23,4 +23,7 @@ router.post(
   authController.resendOTPController
 );
 
+// forget password
+router.post("/forgot-password", authController.forgotPassword);
+
 module.exports = router;

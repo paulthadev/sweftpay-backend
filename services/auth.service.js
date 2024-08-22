@@ -47,7 +47,7 @@ class AuthService {
       if (emailResult.error) {
         console.error("Failed to send OTP email:", emailResult.error);
         // You might want to handle this error, perhaps by deleting the newly created user
-        // await User.findByIdAndDelete(newUser._id);
+        await User.findByIdAndDelete(newUser._id);
         return {
           status: "failed",
           message:

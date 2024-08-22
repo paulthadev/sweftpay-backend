@@ -97,7 +97,7 @@ class AuthController {
       // Create reset URL
       const resetUrl = `${req.protocol}://${req.get(
         "host"
-      )}/api/v1/auth/reset-password/${resetToken}`;
+      )}/api/auth/reset-password/${resetToken}`;
 
       // Generate email content using the template
       const emailContent = passwordResetTemplate(resetUrl);
@@ -141,6 +141,56 @@ class AuthController {
       }
     } catch (error) {
       console.error("Error in forgot password:", error);
+      return handleResponse(req, res, { message: "Server error" }, 500);
+    }
+  };
+
+  getResetPassword = async (req, res) => {
+    // This method is optional, used if you want to validate the token before showing the reset form
+    const { token } = req.params;
+
+    // You might want to check if the token is valid here
+    // For now, we'll just return a success message
+    return handleResponse(req, res, { message: "Token is valid" }, 200);
+  };
+
+  resetPassword = async (req, res) => {
+    try {
+      const { token } = req.params;
+      const { password } = req.body;
+
+      // Find user by token
+      const user = await User.findOne({
+        resetPasswordToken: crypto
+          .createHash("sha256")
+          .update(token)
+          .digest("hex"),
+        resetPasswordExpire: { $gt: Date.now() },
+      });
+
+      if (!user) {
+        return handleResponse(
+          req,
+          res,
+          { message: "Invalid or expired token" },
+          400
+        );
+      }
+
+      // Set new password
+      user.password = await bcrypt.hash(password, 10);
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save();
+
+      return handleResponse(
+        req,
+        res,
+        { message: "Password reset successful" },
+        200
+      );
+    } catch (error) {
+      console.error("Error in reset password:", error);
       return handleResponse(req, res, { message: "Server error" }, 500);
     }
   };

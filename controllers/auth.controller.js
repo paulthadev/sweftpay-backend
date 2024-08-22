@@ -114,7 +114,7 @@ class AuthController {
           200
         );
       } catch (err) {
-        logger.error("Error sending password reset email:", err);
+        console.error("Error sending password reset email:", err);
         user.resetPasswordToken = undefined;
         user.resetPasswordExpire = undefined;
         await user.save();
@@ -127,7 +127,7 @@ class AuthController {
         );
       }
     } catch (error) {
-      logger.error("Error in forgot password:", error);
+      console.error("Error in forgot password:", error);
       return handleResponse(req, res, { message: "Server error" }, 500);
     }
   };

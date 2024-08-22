@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/variables");
 const MonnifyService = require("../services/monnify.service");
 const { generateOTP, sendEmail } = require("../utils/otp");
+const { otpEmailTemplate } = require("../utils/emailTemplate");
 class AuthService {
   register = async (payload) => {
     try {
@@ -19,7 +20,7 @@ class AuthService {
         };
       }
 
-      //hash the passsword
+      //hash the password
       let passwordHashed = bcrypt.hashSync(password, 10);
       let otp = generateOTP();
       //create user
@@ -32,16 +33,36 @@ class AuthService {
       };
 
       const newUser = await User.create(newUserPayload);
-      sendEmail(email.toLowerCase(), otp);
-      // send email verification link to email
+
+      // Generate OTP email content
+      const emailContent = otpEmailTemplate(otp);
+
+      // Send email
+      const emailResult = await sendEmail(
+        email.toLowerCase(),
+        "SweftPay SignUp OTP",
+        emailContent
+      );
+
+      if (emailResult.error) {
+        console.error("Failed to send OTP email:", emailResult.error);
+        // You might want to handle this error, perhaps by deleting the newly created user
+        // await User.findByIdAndDelete(newUser._id);
+        return {
+          status: "failed",
+          message:
+            "User created but failed to send verification email. Please try again.",
+        };
+      }
 
       return {
         status: "success",
-        message: "User registration successful",
-        data: { data: newUserPayload },
+        message:
+          "User registration successful. Please check your email for the verification code.",
+        data: { email: newUserPayload.email, name: newUserPayload.name },
       };
     } catch (error) {
-      console.log(error);
+      console.error("Error in registration:", error);
       return {
         status: "failed",
         message: "An unexpected error occurred, try again later",

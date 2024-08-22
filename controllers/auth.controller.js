@@ -1,10 +1,11 @@
+const User = require("../models/User");
 const crypto = require("crypto");
 const AuthService = require("../services/auth.service");
-const { resendOTP } = require("../utils/otp");
-const User = require("../models/User");
-const sendEmail = require("../utils/email");
 const handleResponse = require("../helpers/response");
 const logger = require("../utils/logger");
+const { resendOTP } = require("../utils/otp");
+const { sendEmail } = require("../utils/otp");
+const { passwordResetTemplate } = require("../utils/emailTemplates");
 
 class AuthController {
   register = async (req, res) => {
@@ -98,14 +99,26 @@ class AuthController {
         "host"
       )}/api/v1/auth/reset-password/${resetToken}`;
 
-      const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please use the following link to reset your password: \n\n ${resetUrl}`;
+      // Generate email content using the template
+      const emailContent = passwordResetTemplate(resetUrl);
 
       try {
-        await sendEmail({
-          email: user.email,
-          subject: "Password Reset Request",
-          message,
-        });
+        const emailResult = await sendEmail(
+          user.email,
+          "SweftPay Password Reset",
+          emailContent
+        );
+        if (emailResult.error) {
+          user.resetPasswordToken = undefined;
+          user.resetPasswordExpire = undefined;
+          await user.save();
+          return handleResponse(
+            req,
+            res,
+            { message: "Email could not be sent" },
+            500
+          );
+        }
 
         return handleResponse(
           req,

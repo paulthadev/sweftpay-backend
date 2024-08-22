@@ -1,7 +1,6 @@
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const config = require("../config/variables");
-const emailTemplate = require("./emailTemplate");
 
 const User = require("../models/User");
 
@@ -9,7 +8,7 @@ const generateOTP = () => {
   return crypto.randomInt(100000, 999999).toString();
 };
 
-const sendEmail = async (email, otp) => {
+const sendEmail = async (email, subject, htmlContent) => {
   const transporter = nodemailer.createTransport({
     host: "sweftpay.com",
     port: 465,
@@ -22,8 +21,8 @@ const sendEmail = async (email, otp) => {
   const mailOptions = {
     to: email,
     from: `SweftPay < ${config.EMAIL}>`,
-    subject: "Verfication code",
-    html: emailTemplate(otp),
+    subject: subject,
+    html: htmlContent,
   };
 
   try {

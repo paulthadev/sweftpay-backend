@@ -95,6 +95,12 @@ class UserService {
       const { _id } = payload;
 
       const user = await User.findById(_id);
+      if (!user) {
+        return {
+          status: "failed",
+          message: "User not found",
+        };
+      }
 
       const isMatch = await bcrypt.compare(currentPassword, user.password);
       if (!isMatch) {
@@ -113,7 +119,7 @@ class UserService {
         message: "Password changed successfully",
       };
     } catch (error) {
-      console.log(error);
+      console.error("Change password service error:", error);
       return {
         status: "failed",
         message: "An unexpected error occurred, try again later",

@@ -115,7 +115,7 @@ class UserController {
         status === "success" ? 200 : 400
       );
     } catch (error) {
-      console.log(error);
+      console.error("Change password error:", error);
       return handleResponse(
         req,
         res,

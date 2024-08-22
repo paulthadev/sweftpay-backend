@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 const AuthService = require("../services/auth.service");
 const handleResponse = require("../helpers/response");
 const logger = require("../utils/logger");

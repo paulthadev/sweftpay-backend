@@ -5,7 +5,7 @@ const handleResponse = require("../helpers/response");
 const logger = require("../utils/logger");
 const { resendOTP } = require("../utils/otp");
 const { sendEmail } = require("../utils/otp");
-const { passwordResetTemplate } = require("../utils/emailTemplates");
+const { passwordResetTemplate } = require("../utils/emailTemplate");
 
 class AuthController {
   register = async (req, res) => {

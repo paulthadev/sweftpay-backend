@@ -101,6 +101,14 @@ class UserController {
   changePassword = async (req, res) => {
     try {
       const { currentPassword, newPassword } = req.body;
+      if (!currentPassword || !newPassword) {
+        return handleResponse(
+          req,
+          res,
+          { message: "Current password and new password are required" },
+          400
+        );
+      }
       const response = await UserService.changePassword(
         req.user,
         currentPassword,

@@ -39,7 +39,7 @@ const resendOTP = async (email) => {
 
   try {
     // Find the user by email
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
       return { error: "User not found" };
@@ -56,9 +56,15 @@ const resendOTP = async (email) => {
     await user.save();
 
     // Send the new OTP to the user's email
-    const emailResult = await sendEmail(email, newOTP);
+    const emailContent = otpEmailTemplate(newOTP);
+    const emailResult = await sendEmail(
+      email,
+      "SweftPay SignUp OTP",
+      emailContent
+    );
+
     if (emailResult.error) {
-      return { error: emailResult.error };
+      return { error: "Failed to send email" };
     }
 
     return { success: true };

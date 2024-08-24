@@ -63,17 +63,35 @@ class AuthController {
   resendOTPController = async (req, res) => {
     const { email } = req.body;
 
-    const result = await resendOTP(email);
+    try {
+      const result = await resendOTP(email);
 
-    if (result.error) {
-      const { error: errorMessage } = result;
-      const statusCode = handleResendOTPError(errorMessage);
-      return res.status(statusCode).json({ message: errorMessage });
+      if (result.error) {
+        const statusCode =
+          {
+            "User not found": 404,
+            "Email already verified": 400,
+            "Failed to send email": 500,
+          }[result.error] || 500;
+
+        return handleResponse(req, res, { message: result.error }, statusCode);
+      }
+
+      return handleResponse(
+        req,
+        res,
+        { message: "OTP resent successfully" },
+        200
+      );
+    } catch (error) {
+      logger.error("Error in resending OTP:", error);
+      return handleResponse(
+        req,
+        res,
+        { message: "An unexpected error occurred" },
+        500
+      );
     }
-
-    return res
-      .status(200)
-      .json({ success: true, message: "OTP resent successfully" });
   };
 
   forgotPassword = async (req, res) => {

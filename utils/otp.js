@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const config = require("../config/variables");
 
 const User = require("../models/User");
+const { otpEmailTemplate } = require("./emailTemplate");
 
 const generateOTP = () => {
   return crypto.randomInt(100000, 999999).toString();

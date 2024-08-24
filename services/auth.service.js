@@ -5,7 +5,10 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/variables");
 const MonnifyService = require("../services/monnify.service");
 const { generateOTP, sendEmail } = require("../utils/otp");
-const { otpEmailTemplate } = require("../utils/emailTemplate");
+const {
+  verificationOTPTemplate,
+  registrationOTPTemplate,
+} = require("../utils/emailTemplate");
 class AuthService {
   register = async (payload) => {
     try {
@@ -29,18 +32,18 @@ class AuthService {
         name,
         password: passwordHashed,
         otp: otp,
-        otpExpires: Date.now() + 3600000,
+        otpExpires: Date.now() + 600000, // 10 minutes
       };
 
       const newUser = await User.create(newUserPayload);
 
       // Generate OTP email content
-      const emailContent = otpEmailTemplate(otp);
+      const emailContent = registrationOTPTemplate(otp);
 
       // Send email
       const emailResult = await sendEmail(
         email.toLowerCase(),
-        "SweftPay SignUp OTP",
+        "SweftPay registration OTP",
         emailContent
       );
 
@@ -149,9 +152,24 @@ class AuthService {
 
       //check if user is verified
       if (!userExists.emailVerified) {
+        // Generate new OTP
+        const newOTP = generateOTP();
+        userExists.otp = newOTP;
+        userExists.otpExpires = Date.now() + 600000; // 10 minutes
+        await userExists.save();
+
+        // Send verification OTP
+        const emailContent = verificationOTPTemplate(newOTP);
+        await sendEmail(
+          userExists.email,
+          "SweftPay Account Verification OTP",
+          emailContent
+        );
+
         return {
           status: "failed",
-          message: "Please verify your account",
+          message:
+            "Please verify your account. A new OTP has been sent to your email.",
         };
       }
 
@@ -166,7 +184,7 @@ class AuthService {
       });
 
       userExists.accessToken = token;
-      userExists.save();
+      await userExists.save();
 
       const [user, wallet] = await Promise.all([
         User.findOne({ _id: userExists._id }).select(

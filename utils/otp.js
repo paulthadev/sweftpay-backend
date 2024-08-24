@@ -3,7 +3,10 @@ const crypto = require("crypto");
 const config = require("../config/variables");
 
 const User = require("../models/User");
-const { otpEmailTemplate } = require("./emailTemplate");
+const {
+  registrationOTPTemplate,
+  verificationOTPTemplate,
+} = require("./emailTemplate");
 
 const generateOTP = () => {
   return crypto.randomInt(100000, 999999).toString();
@@ -36,33 +39,31 @@ const sendEmail = async (email, subject, htmlContent) => {
 };
 
 const resendOTP = async (email) => {
-  const newOTP = generateOTP(); // Generate a new OTP
+  const newOTP = generateOTP();
 
   try {
-    // Find the user by email
     const user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
       return { error: "User not found" };
     }
 
-    // Check if the user's email is already verified
     if (user.emailVerified) {
       return { error: "Email already verified" };
     }
 
-    // Update the user's OTP
     user.otp = newOTP;
-    user.otpExpires = Date.now() + 3600000; // Set OTP expiration time (1 hour)
+    user.otpExpires = Date.now() + 600000; // 10 minutes
     await user.save();
 
-    // Send the new OTP to the user's email
-    const emailContent = otpEmailTemplate(newOTP);
-    const emailResult = await sendEmail(
-      email,
-      "SweftPay SignUp OTP",
-      emailContent
-    );
+    const emailContent = user.emailVerified
+      ? verificationOTPTemplate(newOTP)
+      : registrationOTPTemplate(newOTP);
+    const subject = user.emailVerified
+      ? "SweftPay account verification OTP"
+      : "SweftPay registration OTP";
+
+    const emailResult = await sendEmail(email, subject, emailContent);
 
     if (emailResult.error) {
       return { error: "Failed to send email" };

@@ -1,7 +1,7 @@
+const cloudinary = require("cloudinary").v2;
 const User = require("../models/User");
 const Wallet = require("../models/Wallet");
 const bcrypt = require("bcrypt");
-const cloudinary = require("cloudinary").v2;
 const {
   CLOUDINARY_NAME,
   CLOUDINARY_API_KEY,
@@ -93,7 +93,7 @@ class UserService {
       }
 
       // Validate input data
-      const allowedUpdates = ["name", "email", "profileImage"]; // Add other allowed fields
+      const allowedUpdates = ["name", "email", "profileImage"];
       const isValidOperation = Object.keys(profileData).every((update) =>
         allowedUpdates.includes(update)
       );
@@ -116,8 +116,19 @@ class UserService {
       // If there's a new profile image, delete the old one and upload the new one
       if (profileData.profileImage) {
         if (user.profileImagePublicId) {
-          // Delete the old image from Cloudinary
-          await cloudinary.uploader.destroy(user.profileImagePublicId);
+          console.log(
+            "Deleting old image with public_id:",
+            user.profileImagePublicId
+          );
+
+          // Attempt to delete the old image
+          const result = await cloudinary.uploader.destroy(
+            user.profileImagePublicId
+          );
+
+          console.log("Deletion result:", result);
+        } else {
+          console.log("No previous profile image to delete.");
         }
 
         // Upload the new image and get its public_id

@@ -76,7 +76,6 @@ class UserController {
     try {
       const profileData = req.body;
 
-      // If a file was uploaded, add the Cloudinary URL to profileData
       if (req.file) {
         profileData.profileImage = req.file.path;
       }
@@ -95,12 +94,11 @@ class UserController {
       return handleResponse(
         req,
         res,
-        { message: "An unexpected error occurred" },
+        { message: "An unexpected error occurred", error: error.message },
         500
       );
     }
   };
-
   changePassword = async (req, res) => {
     try {
       const { currentPassword, newPassword } = req.body;

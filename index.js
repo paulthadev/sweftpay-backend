@@ -19,9 +19,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(rtracer.expressMiddleware());
 
-// Serve static files from the uploads directory
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
 // Routes
 app.get("/", (req, res) => {
   return res.send("Welcome to bill payment service");

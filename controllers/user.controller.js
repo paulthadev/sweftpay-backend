@@ -74,10 +74,13 @@ class UserController {
 
   updateProfile = async (req, res) => {
     try {
-      const profileData = {
-        ...req.body,
-        profileImage: req.file ? req.file.path : undefined,
-      };
+      const profileData = req.body;
+
+      // If a file was uploaded, add the Cloudinary URL to profileData
+      if (req.file) {
+        profileData.profileImage = req.file.path;
+      }
+
       const response = await UserService.updateProfile(req.user, profileData);
       const { status, data, message } = response;
 
@@ -88,7 +91,7 @@ class UserController {
         status === "success" ? 200 : 400
       );
     } catch (error) {
-      console.log(error);
+      console.error("Error updating profile:", error);
       return handleResponse(
         req,
         res,

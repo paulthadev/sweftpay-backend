@@ -19,5 +19,8 @@ module.exports = {
   VT_PASS_USERNAME: process.env.VT_PASS_USERNAME,
   VT_PASS_PASSWORD: process.env.VT_PASS_PASSWORD,
   EMAIL: process.env.EMAIL,
-  PASS: process.env.PASS
+  PASS: process.env.PASS,
+  CLOUDINARY_NAME: process.env.CLOUDINARY_NAME,
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 };

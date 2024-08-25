@@ -72,9 +72,21 @@ class UserService {
     try {
       const { _id } = payload;
 
+      // If there's a new profile image, ensure it's the Cloudinary URL
+      if (profileData.profileImage) {
+        // No need to modify profileData.profileImage as it should already be the Cloudinary URL
+      }
+
       const updatedUser = await User.findByIdAndUpdate(_id, profileData, {
         new: true,
       }).select("-password -__v -accessToken -otp -otpExpires");
+
+      if (!updatedUser) {
+        return {
+          status: "failed",
+          message: "User not found",
+        };
+      }
 
       return {
         status: "success",
@@ -82,7 +94,7 @@ class UserService {
         data: { user: updatedUser },
       };
     } catch (error) {
-      console.log(error);
+      console.error("Error updating profile:", error);
       return {
         status: "failed",
         message: "An unexpected error occurred, try again later",

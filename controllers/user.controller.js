@@ -77,7 +77,6 @@ class UserController {
       const profileData = req.body;
 
       if (req.file) {
-        console.log("Cloudinary upload response:", req.file);
         profileData.profileImage = req.file.path;
       }
 

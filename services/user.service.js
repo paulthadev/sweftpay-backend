@@ -1,6 +1,18 @@
 const User = require("../models/User");
 const Wallet = require("../models/Wallet");
 const bcrypt = require("bcrypt");
+const cloudinary = require("cloudinary").v2;
+const {
+  CLOUDINARY_NAME,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
+} = require("../config/variables");
+
+cloudinary.config({
+  cloud_name: CLOUDINARY_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
+});
 
 class UserService {
   userProfile = async (payload) => {
@@ -80,7 +92,7 @@ class UserService {
         };
       }
 
-      // Validate input data (example - adjust according to your needs)
+      // Validate input data
       const allowedUpdates = ["name", "email", "profileImage"]; // Add other allowed fields
       const isValidOperation = Object.keys(profileData).every((update) =>
         allowedUpdates.includes(update)
@@ -92,18 +104,37 @@ class UserService {
         };
       }
 
-      // If there's a new profile image, ensure it's the Cloudinary URL
-      if (profileData.profileImage) {
-        console.log("Updating profile image to:", profileData.profileImage);
+      // Find the existing user
+      const user = await User.findById(_id);
+      if (!user) {
+        return {
+          status: "failed",
+          message: "User not found",
+        };
       }
 
+      // If there's a new profile image, delete the old one and upload the new one
+      if (profileData.profileImage) {
+        if (user.profileImagePublicId) {
+          // Delete the old image from Cloudinary
+          await cloudinary.uploader.destroy(user.profileImagePublicId);
+        }
+
+        // Upload the new image and get its public_id
+        const uploadResult = await cloudinary.uploader.upload(
+          profileData.profileImage
+        );
+        profileData.profileImage = uploadResult.secure_url;
+        profileData.profileImagePublicId = uploadResult.public_id;
+      }
+
+      // Update the user profile
       const updatedUser = await User.findByIdAndUpdate(_id, profileData, {
         new: true,
         runValidators: true,
       }).select("-password -__v -accessToken -otp -otpExpires");
 
       if (!updatedUser) {
-        console.log(`User not found for ID: ${_id}`);
         return {
           status: "failed",
           message: "User not found",

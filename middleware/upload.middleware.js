@@ -23,6 +23,7 @@ const storage = new CloudinaryStorage({
 });
 
 const fileFilter = (req, file, cb) => {
+  console.log("Received file:", file);
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {

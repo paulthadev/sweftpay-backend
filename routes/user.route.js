@@ -34,7 +34,14 @@ router.put(
   "/update-profile",
   authMiddleware.ValidateBearerToken,
   authMiddleware.ValidateUserStatus,
-  upload.single("profileImage"),
+  (req, res, next) => {
+    upload.single("profileImage")(req, res, (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message });
+      }
+      next();
+    });
+  },
   userController.updateProfile
 );
 

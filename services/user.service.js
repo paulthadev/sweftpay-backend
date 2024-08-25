@@ -72,22 +72,45 @@ class UserService {
     try {
       const { _id } = payload;
 
+      // Check if there's anything to update
+      if (Object.keys(profileData).length === 0) {
+        return {
+          status: "failed",
+          message: "No updates provided",
+        };
+      }
+
+      // Validate input data (example - adjust according to your needs)
+      const allowedUpdates = ["name", "email", "profileImage"]; // Add other allowed fields
+      const isValidOperation = Object.keys(profileData).every((update) =>
+        allowedUpdates.includes(update)
+      );
+      if (!isValidOperation) {
+        return {
+          status: "failed",
+          message: "Invalid updates!",
+        };
+      }
+
       // If there's a new profile image, ensure it's the Cloudinary URL
       if (profileData.profileImage) {
-        // No need to modify profileData.profileImage as it should already be the Cloudinary URL
+        console.log("Updating profile image to:", profileData.profileImage);
       }
 
       const updatedUser = await User.findByIdAndUpdate(_id, profileData, {
         new: true,
+        runValidators: true, // Run mongoose validations
       }).select("-password -__v -accessToken -otp -otpExpires");
 
       if (!updatedUser) {
+        console.log(`User not found for ID: ${_id}`);
         return {
           status: "failed",
           message: "User not found",
         };
       }
 
+      console.log(`Profile updated successfully for user ID: ${_id}`);
       return {
         status: "success",
         message: "Profile updated successfully",
@@ -95,6 +118,12 @@ class UserService {
       };
     } catch (error) {
       console.error("Error updating profile:", error);
+      if (error.name === "ValidationError") {
+        return {
+          status: "failed",
+          message: "Validation error: " + error.message,
+        };
+      }
       return {
         status: "failed",
         message: "An unexpected error occurred, try again later",

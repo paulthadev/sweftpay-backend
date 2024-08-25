@@ -99,7 +99,7 @@ class UserService {
 
       const updatedUser = await User.findByIdAndUpdate(_id, profileData, {
         new: true,
-        runValidators: true, // Run mongoose validations
+        runValidators: true,
       }).select("-password -__v -accessToken -otp -otpExpires");
 
       if (!updatedUser) {

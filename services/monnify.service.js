@@ -3,13 +3,13 @@ const MonnifyAccessToken = require("../models/MonnifyAccessTokens");
 const Log = require("../models/Log");
 const moment = require("moment");
 const config = require("../config/variables");
-const MonnifyVirtualAccount = require("../models/MonnifyVirtualAccount")
-const crypto = require("crypto")
+const MonnifyVirtualAccount = require("../models/MonnifyVirtualAccount");
+const crypto = require("crypto");
 const Transaction = require("../models/Transaction");
 const User = require("../models/User");
 //const PaymentService = require("../services/payment.service");
-const Webhook = require("../models/Webhook")
-const WalletUtils = require("../utils/wallet")
+const Webhook = require("../models/Webhook");
+const WalletUtils = require("../utils/wallet");
 
 class MonnifyService {
   authenticate = async () => {
@@ -226,8 +226,8 @@ class MonnifyService {
             );
 
             if (newVirtualAcct) {
-              newVirtualAcctPayload["meta"] = undefined
-              newVirtualAcctPayload[_id] = newVirtualAcct._id
+              newVirtualAcctPayload["meta"] = undefined;
+              newVirtualAcctPayload[_id] = newVirtualAcct._id;
               savedReservedAccountData.push(newVirtualAcctPayload);
             }
           }
@@ -373,6 +373,72 @@ class MonnifyService {
           : errMsg,
         status: "failed",
       });
+      return {
+        status: "failed",
+        message: "Request failed",
+      };
+    }
+  };
+
+  deallocateReservedAccount = async (payload) => {
+    const tokenData = await this.authenticate();
+    if (tokenData.status === "failed") {
+      return {
+        status: "failed",
+        message: "Request failed",
+      };
+    }
+
+    const url = `${config.MONNIFY_BASE_URL}/api/v2/bank-transfer/reserved-accounts`;
+    const headers = {
+      Authorization: `Bearer ${tokenData.data.token}`,
+    };
+
+    const { _id } = payload;
+
+    try {
+      let axiosConfig = {
+        headers,
+      };
+
+      // Change the HTTP method to DELETE for deallocating the reserved account
+      const { data } = await axios.delete(`${url}/${_id}`, axiosConfig);
+
+      const { requestSuccessful, responseBody } = data;
+
+      Log.create({
+        service: "monnify",
+        httpMethod: "delete",
+        url: `${url}/${_id}`,
+        request: JSON.stringify({ accountReference: _id }),
+        headers: JSON.stringify(headers),
+        response: JSON.stringify(data),
+        status: requestSuccessful ? "success" : "failed",
+      });
+
+      return {
+        status: "success",
+        message: "Reserved account deallocated successfully",
+        data: responseBody,
+      };
+    } catch (error) {
+      console.log(error);
+      const errMsg = error.response?.data
+        ? error.response?.data?.message
+        : error.message;
+
+      Log.create({
+        service: "monnify",
+        httpMethod: "delete",
+        url: `${url}/${_id}`,
+        request: JSON.stringify({ accountReference: _id }),
+        headers: JSON.stringify(headers),
+        response: error.response?.data
+          ? JSON.stringify(error.response?.data)
+          : errMsg,
+        status: "failed",
+      });
+
       return {
         status: "failed",
         message: "Request failed",
@@ -592,12 +658,14 @@ class MonnifyService {
 
       //for reserved account
       if (eventType.trim()?.toUpperCase() === "SUCCESSFUL_TRANSACTION") {
-       const processRes =  await this.processReservedAccountTransactions(requestPayload);
+        const processRes = await this.processReservedAccountTransactions(
+          requestPayload
+        );
 
-       return {
-         status: processRes.status,
-         message: processRes.message,
-       };
+        return {
+          status: processRes.status,
+          message: processRes.message,
+        };
       }
     } catch (error) {
       console.log(error);

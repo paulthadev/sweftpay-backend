@@ -63,6 +63,25 @@ class UserService {
     try {
       const { _id } = payload;
 
+      // Step 1: Deallocate reserved Monnify account
+      const deallocateResponse = await MonnifyService.deallocateReservedAccount(
+        { _id }
+      );
+
+      // Log the response from deallocation, but don't stop account deletion if it fails
+      if (deallocateResponse.status === "failed") {
+        console.log(
+          "Failed to deallocate reserved Monnify account:",
+          deallocateResponse.message
+        );
+      } else {
+        console.log(
+          "Monnify account deallocated successfully:",
+          deallocateResponse.message
+        );
+      }
+
+      // Step 2: Delete user from database
       await User.findByIdAndDelete(_id);
       await Wallet.findOneAndDelete({ user: _id });
 

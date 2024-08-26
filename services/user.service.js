@@ -2,6 +2,7 @@ const cloudinary = require("cloudinary").v2;
 const User = require("../models/User");
 const Wallet = require("../models/Wallet");
 const bcrypt = require("bcrypt");
+const MonnifyService = require("../services/monnify.service");
 const {
   CLOUDINARY_NAME,
   CLOUDINARY_API_KEY,

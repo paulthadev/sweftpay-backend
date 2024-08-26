@@ -380,7 +380,7 @@ class MonnifyService {
     }
   };
 
-  deallocateReservedAccount = async (payload) => {
+  deallocateReservedAccount = async (accountReference) => {
     const tokenData = await this.authenticate();
     if (tokenData.status === "failed") {
       return {
@@ -389,37 +389,38 @@ class MonnifyService {
       };
     }
 
-    const url = `${config.MONNIFY_BASE_URL}/api/v2/bank-transfer/reserved-accounts`;
+    const url = `${config.MONNIFY_BASE_URL}/api/v1/bank-transfer/reserved-accounts/${accountReference}`;
     const headers = {
       Authorization: `Bearer ${tokenData.data.token}`,
+      "Content-Type": "application/json",
     };
-
-    const { _id } = payload;
 
     try {
       let axiosConfig = {
         headers,
       };
 
-      // Change the HTTP method to DELETE for deallocating the reserved account
-      const { data } = await axios.delete(`${url}/${_id}`, axiosConfig);
+      // Send the DELETE request with no body
+      const { data } = await axios.delete(url, axiosConfig);
 
-      const { requestSuccessful, responseBody } = data;
+      const { requestSuccessful, responseBody, responseMessage, responseCode } =
+        data;
 
       Log.create({
         service: "monnify",
         httpMethod: "delete",
-        url: `${url}/${_id}`,
-        request: JSON.stringify({ accountReference: _id }),
+        url,
+        request: JSON.stringify({ accountReference }),
         headers: JSON.stringify(headers),
         response: JSON.stringify(data),
         status: requestSuccessful ? "success" : "failed",
       });
 
       return {
-        status: "success",
-        message: "Reserved account deallocated successfully",
+        status: requestSuccessful ? "success" : "failed",
+        message: responseMessage || "Request failed",
         data: responseBody,
+        responseCode,
       };
     } catch (error) {
       console.log(error);
@@ -430,8 +431,8 @@ class MonnifyService {
       Log.create({
         service: "monnify",
         httpMethod: "delete",
-        url: `${url}/${_id}`,
-        request: JSON.stringify({ accountReference: _id }),
+        url,
+        request: JSON.stringify({ accountReference }),
         headers: JSON.stringify(headers),
         response: error.response?.data
           ? JSON.stringify(error.response?.data)

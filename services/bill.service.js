@@ -243,6 +243,8 @@ class BillService {
       amount: amount,
       phone,
       quantity: quantity,
+
+      // quantity: serviceId === "spectranet" ? quantity : undefined,
     };
 
     try {

@@ -380,7 +380,7 @@ class BillService {
   payTVSubscription = async (payload) => {
     const getConfigRes = await this.getConfig({
       requestType: "post",
-      basic: payload?.serviceId === "dstv" ? true : undefined,
+      // basic: payload?.serviceId === "dstv" ? true : undefined,
     });
     if (getConfigRes.status === "failed") {
       return {

@@ -490,7 +490,7 @@ class BillService {
 
     let requestPayload = {
       serviceID: serviceId,
-      billersCode,
+      billersCode: billersCode,
     };
 
     try {

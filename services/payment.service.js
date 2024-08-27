@@ -317,7 +317,7 @@ class PaymentService {
       const { user, data } = payload;
       const { serviceId, billersCode } = data;
 
-      const billServiceRes = await BillService.verifySmileEmail({
+      const billServiceRes = await BillService.verifySmartCardNumber({
         ...data,
       });
 

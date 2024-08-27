@@ -205,7 +205,13 @@ class BillService {
   };
 
   buyData = async (payload) => {
-    const getConfigRes = await this.getConfig({ requestType: "post" });
+    const getConfigRes = await this.getConfig({
+      requestType: "post",
+      basic:
+        payload?.serviceId === "smile-direct" || "spectranet"
+          ? true
+          : undefined,
+    });
     if (getConfigRes.status === "failed") {
       return {
         status: "failed",
@@ -237,6 +243,8 @@ class BillService {
       amount: amount,
       phone,
       quantity: quantity,
+
+      // quantity: serviceId === "spectranet" ? quantity : undefined,
     };
 
     try {

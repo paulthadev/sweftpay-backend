@@ -380,59 +380,52 @@ class MonnifyService {
     }
   };
 
-  deallocateReservedAccount = async (accountReference) => {
-    const tokenData = await this.authenticate();
-    if (tokenData.status === "failed") {
-      return {
-        status: "failed",
-        message: "Request failed",
-      };
-    }
-
-    const url = `${config.MONNIFY_BASE_URL}/api/v1/bank-transfer/reserved-accounts/${accountReference}`;
-    const headers = {
-      Authorization: `Bearer ${tokenData.data.token}`,
-      "Content-Type": "application/json",
-    };
-
+  deallocateReservedAccount = async (payload) => {
     try {
-      let axiosConfig = {
-        headers,
+      // Authenticate and get token
+      const tokenData = await this.authenticate();
+      if (tokenData.status === "failed") {
+        return {
+          status: "failed",
+          message: "Authentication failed",
+        };
+      }
+
+      const url = `${config.MONNIFY_BASE_URL}/api/v1/bank-transfer/reserved-accounts/reference/${payload._id}`;
+      const headers = {
+        Authorization: `Bearer ${tokenData.data.token}`,
       };
 
-      // Send the DELETE request with no body
-      const { data } = await axios.delete(url, axiosConfig);
+      // Send DELETE request to deallocate account
+      const { data } = await axios.delete(url, { headers });
 
-      const { requestSuccessful, responseBody, responseMessage, responseCode } =
-        data;
+      const { requestSuccessful, responseBody } = data;
 
+      // Log success
       Log.create({
         service: "monnify",
-        httpMethod: "delete",
+        httpMethod: "DELETE",
         url,
-        request: JSON.stringify({ accountReference }),
+        request: JSON.stringify({ accountReference: payload._id }),
         headers: JSON.stringify(headers),
         response: JSON.stringify(data),
         status: requestSuccessful ? "success" : "failed",
       });
 
       return {
-        status: requestSuccessful ? "success" : "failed",
-        message: responseMessage || "Request failed",
+        status: "success",
+        message: "Reserved account deallocated successfully",
         data: responseBody,
-        responseCode,
       };
     } catch (error) {
-      console.log(error);
-      const errMsg = error.response?.data
-        ? error.response?.data?.message
-        : error.message;
+      // Log error
+      const errMsg = error.response?.data?.message || error.message;
 
       Log.create({
         service: "monnify",
-        httpMethod: "delete",
+        httpMethod: "DELETE",
         url,
-        request: JSON.stringify({ accountReference }),
+        request: JSON.stringify({ accountReference: payload._id }),
         headers: JSON.stringify(headers),
         response: error.response?.data
           ? JSON.stringify(error.response?.data)

@@ -93,7 +93,9 @@ class BillService {
       if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: data?.content?.error || "Request failed to complete, try again later",
+          message:
+            data?.content?.error ||
+            "Request failed to complete, try again later",
         };
       }
 
@@ -262,7 +264,9 @@ class BillService {
       if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: data?.content?.error || "Request failed to complete, try again later",
+          message:
+            data?.content?.error ||
+            "Request failed to complete, try again later",
         };
       }
 
@@ -336,7 +340,9 @@ class BillService {
       if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: data?.content?.error || "Request failed to complete, try again later",
+          message:
+            data?.content?.error ||
+            "Request failed to complete, try again later",
         };
       }
 
@@ -428,7 +434,9 @@ class BillService {
       if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: data?.content?.error || "Request failed to complete, try again later",
+          message:
+            data?.content?.error ||
+            "Request failed to complete, try again later",
         };
       }
 
@@ -502,7 +510,9 @@ class BillService {
       if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: data?.content?.error || "Request failed to complete, try again later",
+          message:
+            data?.content?.error ||
+            "Request failed to complete, try again later",
         };
       }
 
@@ -537,7 +547,7 @@ class BillService {
 
   payElectricityBill = async (payload) => {
     const getConfigRes = await this.getConfig({
-      requestType: "post"
+      requestType: "post",
     });
     if (getConfigRes.status === "failed") {
       return {
@@ -552,14 +562,8 @@ class BillService {
       ...requestConfig,
     };
 
-    const {
-      serviceId,
-      phone,
-      amount,
-      reference,
-      billersCode,
-      variationCode,
-    } = payload;
+    const { serviceId, phone, amount, reference, billersCode, variationCode } =
+      payload;
 
     let requestPayload = {
       request_id: reference,
@@ -664,7 +668,9 @@ class BillService {
       if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: data?.content?.error || "Request failed to complete, try again later",
+          message:
+            data?.content?.error ||
+            "Request failed to complete, try again later",
         };
       }
 
@@ -828,7 +834,9 @@ class BillService {
       if (data?.code !== "000" || data?.content?.error) {
         return {
           status: "failed",
-          message: data?.content?.error || "Request failed to complete, try again later",
+          message:
+            data?.content?.error ||
+            "Request failed to complete, try again later",
         };
       }
 

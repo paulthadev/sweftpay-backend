@@ -410,7 +410,7 @@ class BillService {
       serviceID: serviceId,
       billersCode,
       variation_code: variationCode,
-      amount: amount,
+      amount,
       phone,
       quantity,
       subscription_type: subscriptionType,
@@ -736,7 +736,7 @@ class BillService {
       serviceID: serviceId,
       billersCode: serviceId == "jamb" ? billersCode : undefined,
       variation_code: variationCode,
-      amount: amount,
+      amount,
       phone,
       quantity,
     };

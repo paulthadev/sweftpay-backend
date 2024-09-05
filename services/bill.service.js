@@ -242,7 +242,6 @@ class BillService {
       variation_code: variationCode,
       amount: amount,
       phone,
-      // quantity: quantity,
       quantity: serviceId === "spectranet" ? quantity : undefined,
     };
 
@@ -250,10 +249,8 @@ class BillService {
       let axiosConfig = {
         headers,
       };
-      // const { data } = await axios.post(url, requestPayload, axiosConfig);
 
       const { data } = await axios.post(url, requestPayload, axiosConfig);
-      console.log("VTPass API Response:", JSON.stringify(data, null, 2));
 
       Log.create({
         service: "vtPass",

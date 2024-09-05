@@ -99,13 +99,13 @@ class PaymentValidator {
           "airtel-data",
           "etisalat-data",
           "9mobile-sme-data",
-          "smile-direct",
-          "spectranet"
+          "smile-direct"
+          // "spectranet"
         )
         .required(),
       billersCode: Joi.string().required(),
       variationCode: Joi.string().required(),
-      quantity: Joi.number().optional(),
+      // quantity: Joi.number().optional(),
     });
 
     const { error } = schema.validate(req.body);

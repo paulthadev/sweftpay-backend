@@ -90,7 +90,8 @@ class PaymentController {
         status == "success" ? 200 : 400
       );
     } catch (error) {
-      console.log(error);
+      console.error("Error in buyData:", error);
+      console.error("Request body:", req.body);
       return handleResponse(
         req,
         res,

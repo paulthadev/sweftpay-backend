@@ -207,10 +207,10 @@ class BillService {
   buyData = async (payload) => {
     const getConfigRes = await this.getConfig({
       requestType: "post",
-      basic:
-        payload?.serviceId === "smile-direct" || "spectranet"
-          ? true
-          : undefined,
+      // basic:
+      //   payload?.serviceId === "smile-direct" || "spectranet"
+      //     ? true
+      //     : undefined,
     });
     if (getConfigRes.status === "failed") {
       return {
@@ -242,15 +242,14 @@ class BillService {
       variation_code: variationCode,
       amount: amount,
       phone,
-      quantity: quantity,
-
-      // quantity: serviceId === "spectranet" ? quantity : undefined,
+      quantity: serviceId === "spectranet" ? quantity : undefined,
     };
 
     try {
       let axiosConfig = {
         headers,
       };
+
       const { data } = await axios.post(url, requestPayload, axiosConfig);
 
       Log.create({
@@ -411,7 +410,7 @@ class BillService {
       serviceID: serviceId,
       billersCode,
       variation_code: variationCode,
-      amount: amount,
+      amount,
       phone,
       quantity,
       subscription_type: subscriptionType,
@@ -737,7 +736,7 @@ class BillService {
       serviceID: serviceId,
       billersCode: serviceId == "jamb" ? billersCode : undefined,
       variation_code: variationCode,
-      amount: amount,
+      amount,
       phone,
       quantity,
     };

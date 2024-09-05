@@ -95,6 +95,7 @@ class PaymentValidator {
         .valid(
           "mtn-data",
           "glo-data",
+          "glo-sme-data",
           "airtel-data",
           "etisalat-data",
           "9mobile-sme-data",

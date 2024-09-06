@@ -766,7 +766,7 @@ class BillService {
 
       return {
         status: "success",
-        message: "Data purchased successfully",
+        message: "Education Bill purchased successfully",
         data: data,
       };
     } catch (error) {
